@@ -32,6 +32,7 @@ export default class MainSlide extends Component {
                 toValue: 1,
                 duration: 2000,
                 easing: Easing.back(),
+                useNativeDriver:true
             }
         ).start(() => this.fadeOut())
         
@@ -45,7 +46,6 @@ export default class MainSlide extends Component {
             {
                 toValue: 0,
                 duration: 2000,
-                useNativeDriver:true
             }
         ).start();
     };
