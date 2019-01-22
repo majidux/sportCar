@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
-import Home from "./src/Pages/Home";
+import Home from "./sportCar/Pages/Home";
 
 
 export default class SportCarApp extends Component<Props> {

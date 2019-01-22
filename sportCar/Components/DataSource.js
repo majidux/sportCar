@@ -5,7 +5,7 @@ export default dataSource=[
         yearOfMake:'1968',
         name:'Chevrolet',
         model:'Red Corvette C3',
-        description:'Fastest Car in 70s',
+        description:'Fastest Car in 60s',
         class:'Sport Car',
         production:'1968 - 1974',
         generation:'Third Generation of Corvette'

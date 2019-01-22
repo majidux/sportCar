@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Image, FlatList, Dimensions, Animated,TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, Image, FlatList, Dimensions, Animated, Easing,LayoutAnimation} from 'react-native';
 import dataSource from './DataSource';
 import _ from 'lodash';
+LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+
 let deviceHeight = Dimensions.get('window').height;
 let deviceWidth = Dimensions.get('window').width;
 const {width} = Dimensions.get('window');
@@ -13,34 +15,40 @@ export default class MainSlide extends Component {
         this.state = {
             scrollX: new Animated.Value(0),
             fadeIn: new Animated.Value(0),
-            fadeOut:new Animated.Value(0)
+            fadeOut: new Animated.Value(1),
         }
     }
+    
     
     componentDidMount() {
         this.fadeIn();
     }
     
-    fadeIn() {
-        this.state.fadeIn.setValue(0);
+    
+    fadeIn = () => {
         Animated.timing(
             this.state.fadeIn,
             {
                 toValue: 1,
-                duration: 3000,
+                duration: 2000,
+                easing: Easing.back(),
             }
-        ).start(() => this.fadeOut());
-    }
-    fadeOut() {
-        this.state.fadeIn.setValue(1);
+        ).start(() => this.fadeOut())
+        
+    };
+    
+    
+    fadeOut = () => {
+        this.state.fadeOut.setValue(1);
         Animated.timing(
-            this.state.fadeIn,
+            this.state.fadeOut,
             {
-                toValue: 1,
-                duration: 3000,
+                toValue: 0,
+                duration: 2000,
+                useNativeDriver:true
             }
         ).start();
-    }
+    };
     
     
     render() {
@@ -50,17 +58,7 @@ export default class MainSlide extends Component {
         return (
             <View style={styles.mainSlider}>
                 <View style={styles.loadingDot}>
-                    {/*<View style={{flex: 1, backgroundColor: '#000'}}>*/}
-                        {/*<TouchableOpacity onPress={() => this.fadeIn()} activeOpacity={0.5}>*/}
-                            {/*<Text style={{color:'#fff',fontSize: 20, textAlign: 'center'}}>Submit</Text>*/}
-                        {/*</TouchableOpacity>*/}
                     
-                        {/*<Animated.View style={{opacity: this.state.fadeIn}}>*/}
-                            {/*<View>*/}
-                                {/*<Text style={{color:'#fff',fontSize: 20, textAlign: 'center'}}>Your order has been submitted</Text>*/}
-                            {/*</View>*/}
-                        {/*</Animated.View>*/}
-                    {/*</View>*/}
                     {scrollIndicator.map((_, i) => {
                         let opacity = position.interpolate({
                             inputRange: [i - .8, i, i + .8],
@@ -77,12 +75,15 @@ export default class MainSlide extends Component {
                                 margin: 8
                             }}>
                                 
-                                <Text style={{
+                                <Animated.Text style={{
+                                    opacity: this.state.fadeIn,
                                     color: '#fff',
                                     fontSize: 30,
                                     fontWeight: 'bold',
                                     fontFamily: 'monospace'
-                                }}>{scrollIndicator[i].yearOfMake}</Text>
+                                }}>{scrollIndicator[i].yearOfMake}
+                                </Animated.Text>
+                            
                             
                             </Animated.View>
                         )
@@ -92,8 +93,8 @@ export default class MainSlide extends Component {
                 <FlatList
                     pagingEnabled
                     data={dataSource}
+                    disableVirtualization={true}
                     horizontal={true}
-                    ref='_scrollView'
                     onScroll={Animated.event([{nativeEvent: {contentOffset: {x: this.state.scrollX}}}])}
                     scrollEventThrottle={16}
                     showsHorizontalScrollIndicator={false}
@@ -102,28 +103,34 @@ export default class MainSlide extends Component {
                         <View style={{height: deviceHeight, width: deviceWidth}}>
                             <Image source={item.image}
                                    style={{height: deviceHeight, width: deviceWidth, position: 'absolute'}}/>
-                            <View style={styles.generation}>
+                            <Animated.View style={[styles.generation, {opacity: this.state.fadeOut}]}>
                                 <Text style={{color: '#fff'}}>{item.generation}</Text>
-                            </View>
-                                <Animated.View style={styles._nameView} onLayout={this.fadeIn()}>
+                            </Animated.View>
+                            <Animated.View style={[styles._nameView, {opacity: this.state.fadeIn}]}>
+                                <View>
                                     <Text style={styles._name}>{item.name}</Text>
                                     <Text style={styles._name}>{item.model}</Text>
                                     <Text style={styles.whiteFont}>{item.description}</Text>
                                     <Text style={styles.whiteFont}>{item.yearOfMake}</Text>
-                                </Animated.View>
-                                
-                            <View style={styles._footer}>
-                                    <View>
-                                        <Text style={styles.footerTitle}>Production</Text>
-                                        <Text style={styles.whiteFont}>{item.production}</Text>
-                                    </View>
-                                    
+                                </View>
+                                <View style={{alignSelf: 'center'}}>
+                                    <Image
+                                        source={require('../Assets/image/chevroletLogoWhite.png')}
+                                        style={{width:40,height:40}}
+                                    />
+                                </View>
+                            </Animated.View>
+                            <Animated.View style={[styles._footer, {opacity: this.state.fadeIn}]}>
                                 <View>
+                                    <Text style={styles.footerTitle}>Production</Text>
+                                    <Text style={styles.whiteFont}>{item.production}</Text>
+                                </View>
+                                
+                                <Animated.View style={{opacity: this.state.fadeIn}}>
                                     <Text style={styles.footerTitle}>Class</Text>
                                     <Text style={styles.whiteFont}>{item.class}</Text>
-                                </View>
-                            </View>
-                            
+                                </Animated.View>
+                            </Animated.View>
                         </View>
                     }
                 />
@@ -145,29 +152,31 @@ const styles = StyleSheet.create({
         paddingVertical: 2
     },
     whiteFont: {
-        color: '#fff',
+        color: '#b8c7c9',
         fontFamily: 'monospace'
     },
     generation: {
         flex: 1,
-        justifyContent:'center',
-        alignItems:'center',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     _nameView: {
         flex: 2,
-        marginLeft: 40,
-        marginBottom: 80
+        marginHorizontal: 40,
+        marginBottom: 80,
+        flexDirection:'row',
+        justifyContent:'space-between'
     },
     flex1: {
         flex: 2
     },
     _name: {
         fontFamily: 'monospace',
-        color: '#fff',
+        color: '#b8c7c9',
         fontSize: 25,
         fontWeight: 'bold'
     },
-  
+    
     _footer: {
         flex: 1,
         margin: 40,
@@ -183,7 +192,7 @@ const styles = StyleSheet.create({
         paddingRight: 50
     },
     footerTitle: {
-        color: '#b3b3b3',
+        color: '#b8c7c9',
         fontFamily: 'monospace'
     }
 });
