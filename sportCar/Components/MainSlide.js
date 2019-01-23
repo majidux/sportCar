@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Image, FlatList, Dimensions, Animated, Easing,LayoutAnimation} from 'react-native';
+import {View, Text, StyleSheet, Image, FlatList, Dimensions, Animated, Easing, LayoutAnimation} from 'react-native';
 import dataSource from './DataSource';
 import _ from 'lodash';
+
 LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
 
 let deviceHeight = Dimensions.get('window').height;
@@ -32,7 +33,7 @@ export default class MainSlide extends Component {
                 toValue: 1,
                 duration: 2000,
                 easing: Easing.back(),
-                useNativeDriver:true
+                useNativeDriver: true
             }
         ).start(() => this.fadeOut())
         
@@ -60,9 +61,9 @@ export default class MainSlide extends Component {
                 <View style={styles.loadingDot}>
                     
                     {scrollIndicator.map((_, i) => {
-                        let opacity = position.interpolate({
+                        var opacity = position.interpolate({
                             inputRange: [i - .8, i, i + .8],
-                            outputRange: [0.15, 1, 0.15],
+                            outputRange: [0.5, 1, 0.5],
                             extrapolate: 'extend',
                         });
                         return (
@@ -100,7 +101,11 @@ export default class MainSlide extends Component {
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item) => item.model}
                     renderItem={({item}) =>
-                        <View style={{height: deviceHeight, width: deviceWidth}}>
+                        
+                        
+                        <Animated.View style={{height: deviceHeight, width: deviceWidth}}>
+                            
+                            
                             <Image source={item.image}
                                    style={{height: deviceHeight, width: deviceWidth, position: 'absolute'}}/>
                             <Animated.View style={[styles.generation, {opacity: this.state.fadeOut}]}>
@@ -116,7 +121,7 @@ export default class MainSlide extends Component {
                                 <View style={{alignSelf: 'center'}}>
                                     <Image
                                         source={require('../Assets/image/chevroletLogoWhite.png')}
-                                        style={{width:40,height:40}}
+                                        style={{width: 40, height: 40}}
                                     />
                                 </View>
                             </Animated.View>
@@ -131,7 +136,8 @@ export default class MainSlide extends Component {
                                     <Text style={styles.whiteFont}>{item.class}</Text>
                                 </Animated.View>
                             </Animated.View>
-                        </View>
+                            
+                        </Animated.View>
                     }
                 />
             
@@ -164,8 +170,8 @@ const styles = StyleSheet.create({
         flex: 2,
         marginHorizontal: 40,
         marginBottom: 80,
-        flexDirection:'row',
-        justifyContent:'space-between'
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
     flex1: {
         flex: 2
