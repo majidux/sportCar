@@ -106,37 +106,40 @@ export default class Flat extends Component {
                                         style={[styles.deviceDimension, styles.image]}
                                     />
                                 </Animated.View>
-                                {scrollIndicator.map((_, i) => {
-                                    let opacity = position.interpolate({
-                                        inputRange: [i - .5, i, i + .5],
-                                        outputRange: [.0, 1, .0],
-                                        extrapolate: 'clamp',
-                                    });
-                                    return (
-                                        <Animated.View key={i} style={[styles.animatedViewMain,{opacity}]}>
-                                            <Animated.View style={[styles.animatedViewInside,{opacity}]}>
-                                                <Animated.View style={[styles.animatedTitleView,{opacity: this.state.fadeIn}]}>
-                                                    <Animated.View>
-                                                        <Animated.Text style={styles.animatedText}>{scrollIndicator[i].place}</Animated.Text>
-                                                    </Animated.View>
-                                                    <Animated.View style={styles.sss}>
-                                                        <Animated.Text>FOLLOW</Animated.Text>
-                                                    </Animated.View>
-                                                </Animated.View>
-                                                <Animated.View style={styles.footer}>
-                                                    <Animated.Text>lll</Animated.Text>
-                                                </Animated.View>
-                                            </Animated.View>
-                                        </Animated.View>
-                                    )
-                                    
-                                })}
+                                
                                 
                             </Animated.View>
                         }
                     />
                     
                 </View>
+                <Animated.View>
+                    {scrollIndicator.map((_, i) => {
+                        let opacity = position.interpolate({
+                            inputRange: [i - .1, i, i + 50],
+                            outputRange: [.0, 1, .0],
+                            extrapolate: 'extend',
+                        });
+                        return (
+                            <Animated.View key={i} style={[styles.animatedViewMain,{opacity}]}>
+                                <Animated.View style={[styles.animatedViewInside,{opacity}]}>
+                                    <Animated.View style={[styles.animatedTitleView,{opacity: this.state.fadeIn}]}>
+                                        <Animated.View style={[styles.sss,styles.flex2]}>
+                                            <Animated.Text style={[styles.animatedText,{opacity: this.state.fadeIn}]}>{scrollIndicator[i].place}</Animated.Text>
+                                        </Animated.View>
+                                        <Animated.View style={[styles.sss,styles.flex1]}>
+                                            <Animated.Text onPress={this._on} style={{opacity: this.state.fadeIn}}>FOLLOW</Animated.Text>
+                                        </Animated.View>
+                                    </Animated.View>
+                                    <Animated.View style={styles.footer}>
+                                        <Animated.Text>lll</Animated.Text>
+                                    </Animated.View>
+                                </Animated.View>
+                            </Animated.View>
+                        )
+        
+                    })}
+                </Animated.View>
             </View>
         );
     }
@@ -144,7 +147,9 @@ export default class Flat extends Component {
 const styles = StyleSheet.create({
     flex1: {
         flex: 1,
-        backgroundColor: 'pink'
+    },
+    flex2: {
+        flex: 2,
     },
     deviceDimension: {
         width: deviceWidth,
@@ -167,7 +172,7 @@ const styles = StyleSheet.create({
     },
     animatedViewInside:{
         justifyContent: 'space-between',
-        backgroundColor:'green',
+        backgroundColor:'#fff',
         alignItems:'center',
         width: deviceWidth,
         height: deviceHeight/3,
@@ -175,8 +180,8 @@ const styles = StyleSheet.create({
         borderTopLeftRadius:50
     },
     animatedText:{
-        color: '#fff',
-        fontSize: 25,
+        color: '#000000',
+        fontSize: 20,
         fontWeight: 'bold',
         fontFamily: 'monospace',
         
@@ -186,14 +191,14 @@ const styles = StyleSheet.create({
         justifyContent:'space-around',
         alignItems:'center',
         flexDirection: 'row',
-        // backgroundColor:'lightgreen',
+        backgroundColor:'lightgreen',
         width: deviceWidth,
         borderTopRightRadius:50,
         borderTopLeftRadius:50
     
     },
     footer:{
-        backgroundColor: 'red',
+        backgroundColor: '#f0f0f0',
         flex:1,
         width:deviceWidth,
         borderTopRightRadius:50,
@@ -201,6 +206,11 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         justifyContent:'center',
         alignItems:'center'
+    },
+    sss:{
+        // justifyContent:'space-around',
+        alignItems:'center',
+        backgroundColor:'red'
     }
     
 });
